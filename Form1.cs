@@ -40,6 +40,28 @@ namespace ConfaTrade
 			BindingList<Товари> s = new BindingList<Товари>();
 			dataGridView1.DataSource = s;
 
+			DataGridViewImageColumn dataGridViewImageColumn = new DataGridViewImageColumn();
+			dataGridViewImageColumn.Width = 22;
+			dataGridView1.Columns.Add(dataGridViewImageColumn);
+
+			//dataGridView1.Font = new Font("Tahoma", 8);
+			//dataGridView1.ForeColor = Color.Blue;
+			//dataGridView1.GridColor = Color.Blue;
+
+			s.AddingNew += S_AddingNew;
+
+			dataGridView1.Columns["ID"].Visible = false;
+			dataGridView1.Columns["Назва"].Width = 200;
+			dataGridView1.Columns["ПовнаНазва"].Width = 200;
+			dataGridView1.Columns["Опис"].Width = 200;
+
+			DataGridViewButtonColumn b = new DataGridViewButtonColumn();
+			b.UseColumnTextForButtonValue = true;
+			b.Text = "..";
+			b.Width = 30;
+
+			int a = dataGridView1.Columns.Add(b);
+
 			Довідники.Товари_Select товари_Select = new Довідники.Товари_Select();
 			товари_Select.QuerySelect.Field.Add(товари_Select.Alias["Назва"]);
 			товари_Select.QuerySelect.Field.Add(товари_Select.Alias["ПовнаНазва"]);
@@ -60,6 +82,21 @@ namespace ConfaTrade
 			BindingList<Ціни> s2 = new BindingList<Ціни>();
 			dataGridView2.DataSource = s2;
 
+
+			Константи.РегламентніЗавдання.Завдання_Розпорядок_TablePart.Record record = new 
+				Константи.РегламентніЗавдання.Завдання_Розпорядок_TablePart.Record();
+			record.ГодинаПочаток = 10;
+			record.ХвилинаПочаток = 30;
+
+			Константи.РегламентніЗавдання.Завдання_Розпорядок_TablePart завдання_Розпорядок_TablePart = new 
+				Константи.РегламентніЗавдання.Завдання_Розпорядок_TablePart();
+			завдання_Розпорядок_TablePart.Records.Add(record);
+			завдання_Розпорядок_TablePart.Save(false);
+		}
+
+		private void S_AddingNew(object sender, AddingNewEventArgs e)
+		{
+			
 		}
 
 		private class Товари
@@ -119,7 +156,7 @@ namespace ConfaTrade
 			BindingList<Ціни> s2 = new BindingList<Ціни>();
 			dataGridView2.DataSource = s2;
 
-			string uid = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
+			string uid = dataGridView1.Rows[e.RowIndex].Cells["ID"].Value.ToString();
 
 			Довідники.Товари_Pointer товари_Pointer = new Довідники.Товари_Pointer(new UnigueID(uid));
 			Довідники.Товари_Objest товари_Objest = товари_Pointer.GetDirectoryObject();
@@ -134,6 +171,8 @@ namespace ConfaTrade
 			{
 				s2.Add(new Ціни(record.ДатаЦіни, record.Ціна, record.Опис));
 			}
+
+			label1.Text = dataGridView1.VerticalScrollingOffset.ToString();
 		}
 	}
 }
